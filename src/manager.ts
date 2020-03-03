@@ -625,10 +625,11 @@ export default class DocumentManager {
       workspace.showMessage(`No remote found`, 'warning')
       return
     }
-    let head = await this.safeRun(['symbolic-ref', '--short', '-q', 'HEAD'], root)
-    head = head.trim()
+    let repo = await this.getRepo(bufnr)
+    if (!repo) return
+    let head = await repo.getHEAD()
     if (!head.length) {
-      workspace.showMessage(`Failed on git symbolic-ref`, 'warning')
+      workspace.showMessage(`Error parsing HEAD`, 'warning')
       return
     }
     const mode = await nvim.call('mode') as string

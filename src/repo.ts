@@ -25,15 +25,15 @@ export default class Repo {
 
   public async getHEAD(): Promise<string> {
     try {
-      const result = await this.exec(['symbolic-ref', '--short', 'HEAD'])
-      if (!result.stdout) {
-        throw new Error('Not in a branch')
-      }
-      return result.stdout.trim()
-    } catch (err) {
       const result = await this.exec(['rev-parse', 'HEAD'])
       if (!result.stdout) {
         throw new Error('Error parsing HEAD')
+      }
+      return result.stdout.trim()
+    } catch (err) {
+      const result = await this.exec(['symbolic-ref', '--short', 'HEAD'])
+      if (!result.stdout) {
+        throw new Error('Not in a branch')
       }
       return result.stdout.trim()
     }
